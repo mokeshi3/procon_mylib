@@ -1,4 +1,7 @@
 #![allow(dead_code)]
+
+use std::cmp::Ordering;
+
 fn gcd(a: usize, b: usize) -> usize {
     let a = a % b;
 
@@ -14,6 +17,39 @@ fn gcd(a: usize, b: usize) -> usize {
 
 fn lcm(a: usize, b: usize) -> usize {
     a * b / gcd(a, b)
+}
+
+fn search<T: Ord>(key: T, elems: &[T]) -> Option<usize> {
+    let mut low = 0;
+    let mut high = elems.len();
+
+    while low != high {
+        let m = (high - low) / 2 + low;
+
+        match elems[m].cmp(&key) {
+            Ordering::Equal => return Some(m),
+            Ordering::Less => {
+                if m == elems.len() - 1 {
+                    return None;
+                }
+
+                low = m + 1;
+            }
+            Ordering::Greater => {
+                if m == 0 {
+                    return None;
+                }
+
+                high = m - 1;
+            }
+        }
+    }
+
+    if elems[low] == key {
+        Some(low)
+    } else {
+        None
+    }
 }
 
 #[cfg(test)]
@@ -36,6 +72,29 @@ mod tests {
         assert_eq!(lcm(12, 10), 60);
         assert_eq!(lcm(6, 7), 42);
         assert_eq!(lcm(123, 456), 18696);
+    }
+
+    #[test]
+    fn test_search() {
+        let a = [1, 3, 6, 8, 12, 20];
+        for i in 0..a.len() {
+            assert_eq!(search(a[i], &a), Some(i));
+        }
+
+        assert_eq!(search(0, &a), None);
+        assert_eq!(search(21, &a), None);
+        assert_eq!(search(2, &a), None);
+        assert_eq!(search(9, &a), None);
+
+        let a = [1, 3, 6, 8, 12];
+        for i in 0..a.len() {
+            assert_eq!(search(a[i], &a), Some(i));
+        }
+
+        assert_eq!(search(0, &a), None);
+        assert_eq!(search(21, &a), None);
+        assert_eq!(search(2, &a), None);
+        assert_eq!(search(9, &a), None);
     }
 
     #[test]
