@@ -52,6 +52,36 @@ fn search<T: Ord>(key: T, elems: &[T]) -> Option<usize> {
     }
 }
 
+// 幅優先探索
+// startからの各ノードへの最短距離を返す
+fn bfs(start: usize, node: &Vec<usize>, path: &Vec<Vec<usize>>) -> Vec<Option<usize>> {
+    let mut ans = vec![None; node.len()];
+    let mut todo = Vec::<usize>::new();
+
+    ans[start] = Some(0);
+    for &i in path[start].iter() {
+        if ans[i] == None {
+            let x = ans[start].unwrap();
+            todo.push(i);
+            ans[i] = Some(x + 1);
+        }
+    }
+
+    while todo.len() != 0 {
+        let i = todo.remove(0);
+
+        for &node in path[i].iter() {
+            if ans[node] == None {
+                let x = ans[i].unwrap();
+                todo.push(node);
+                ans[node] = Some(x + 1);
+            }
+        }
+    }
+
+    ans
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -98,7 +128,15 @@ mod tests {
     }
 
     #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
+    fn test_bfs() {
+        let a = vec![0, 1, 2, 3];
+        let path = vec![
+            vec![1, 2],
+            vec![0, 3],
+            vec![0, 3],
+            vec![1, 2]
+        ];
+
+        assert_eq!(bfs(0, &a, &path), vec![Some(0), Some(1), Some(1), Some(2)]);
     }
 }
