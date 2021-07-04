@@ -2,6 +2,31 @@
 
 use std::cmp::Ordering;
 
+fn get_divisors(n: usize) -> Vec<usize> {
+    // https://algo-logic.info/divisor/
+    let nsq = (n as f32).sqrt() as usize;
+    let mut ans1 = Vec::new();
+    let mut ans2 = Vec::new();
+
+    for i in 1..nsq {
+        if n % i == 0 {
+            ans1.push(i);
+            ans2.insert(0, n / i);
+        }
+    }
+
+    if n % nsq == 0 {
+        ans1.push(nsq);
+
+        if n / nsq != nsq {
+            ans1.push(n / nsq);
+        }
+    }
+
+    ans1.append(&mut ans2);
+    ans1
+}
+
 fn gcd(a: usize, b: usize) -> usize {
     let a = a % b;
 
@@ -54,7 +79,7 @@ fn search<T: Ord>(key: T, elems: &[T]) -> Option<usize> {
 
 // 幅優先探索
 // startからの各ノードへの最短距離を返す
-fn bfs(start: usize, node: &Vec<usize>, path: &Vec<Vec<usize>>) -> Vec<Option<usize>> {
+fn bfs(start: usize, node: &[usize], path: &[Vec<usize>]) -> Vec<Option<usize>> {
     let mut ans = vec![None; node.len()];
     let mut todo = Vec::<usize>::new();
 
@@ -67,7 +92,7 @@ fn bfs(start: usize, node: &Vec<usize>, path: &Vec<Vec<usize>>) -> Vec<Option<us
         }
     }
 
-    while todo.len() != 0 {
+    while !todo.is_empty() {
         let i = todo.remove(0);
 
         for &node in path[i].iter() {
@@ -130,13 +155,15 @@ mod tests {
     #[test]
     fn test_bfs() {
         let a = vec![0, 1, 2, 3];
-        let path = vec![
-            vec![1, 2],
-            vec![0, 3],
-            vec![0, 3],
-            vec![1, 2]
-        ];
+        let path = vec![vec![1, 2], vec![0, 3], vec![0, 3], vec![1, 2]];
 
         assert_eq!(bfs(0, &a, &path), vec![Some(0), Some(1), Some(1), Some(2)]);
+    }
+
+    #[test]
+    fn test_get_divisors() {
+        assert_eq!(get_divisors(36), vec![1, 2, 3, 4, 6, 9, 12, 18, 36]);
+        assert_eq!(get_divisors(24), vec![1, 2, 3, 4, 6, 8, 12, 24]);
+        assert_eq!(get_divisors(1), vec![1]);
     }
 }
