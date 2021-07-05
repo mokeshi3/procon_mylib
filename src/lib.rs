@@ -1,6 +1,27 @@
-#![allow(dead_code)]
+#![allow(dead_code, non_snake_case)]
 
 use std::cmp::Ordering;
+
+fn y() {
+    println!("yes");
+}
+
+fn Y() {
+    println!("Yes");
+}
+
+fn n() {
+    println!("no");
+}
+
+fn N() {
+    println!("No");
+}
+
+#[macro_export]
+macro_rules! ans {
+    ($i:item) => (println!("{}", stringify!($i)))
+}
 
 fn get_divisors(n: usize) -> Vec<usize> {
     // https://algo-logic.info/divisor/
