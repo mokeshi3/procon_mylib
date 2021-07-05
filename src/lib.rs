@@ -23,6 +23,7 @@ macro_rules! ans {
     ($i:item) => (println!("{}", stringify!($i)))
 }
 
+/// get_divisors function returns the list of divisors of n.
 fn get_divisors(n: usize) -> Vec<usize> {
     // https://algo-logic.info/divisor/
     let nsq = (n as f32).sqrt() as usize;
@@ -48,6 +49,8 @@ fn get_divisors(n: usize) -> Vec<usize> {
     ans1
 }
 
+/// gcd function returns the greatest common factor of a and b.
+/// For example, gcd(12, 7) returns 1.
 fn gcd(a: usize, b: usize) -> usize {
     let a = a % b;
 
@@ -61,6 +64,8 @@ fn gcd(a: usize, b: usize) -> usize {
     gcd(greater, smaller)
 }
 
+/// lcm function returns the least common multiple of a and b.
+/// For exmaple, gcd(4, 6) returns 24.
 fn lcm(a: usize, b: usize) -> usize {
     a * b / gcd(a, b)
 }
@@ -98,8 +103,9 @@ fn search<T: Ord>(key: T, elems: &[T]) -> Option<usize> {
     }
 }
 
-// 幅優先探索
-// startからの各ノードへの最短距離を返す
+/// 幅優先探索
+/// startからの各ノードへの最短距離を返す
+/// path[i]はnode[i]が移動可能なノードを表す｡
 fn bfs(start: usize, node: &[usize], path: &[Vec<usize>]) -> Vec<Option<usize>> {
     let mut ans = vec![None; node.len()];
     let mut todo = Vec::<usize>::new();
